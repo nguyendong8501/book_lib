@@ -1,5 +1,6 @@
 package com.example.demo.services.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -24,19 +25,19 @@ public class BookServiceImpl implements BookService {
 	@Autowired
 	private AuthorService authorService;
 
-	
 	public Book saveBook(Book book) {
 		Book addBook = new Book();
 		addBook.setTitle(book.getTitle());
 		addBook.setShort_description(book.getShort_description());
 		addBook.setDescription(book.getDescription());
-		addBook.setUrl(book.getTitle());
-		addBook.getAuthors().addAll(book.getAuthors().stream().map(au -> {
+		addBook.setUrl(book.getUrl());
+		addBook.getAuthors()
+			.addAll(book
+				.getAuthors()
+				.stream()
+				.map(au -> {
 			Author author = authorService.findAuthorById(au.getId());
-			Collection<Book> bookList = author.getBooks();
-			bookList.add(addBook);
-//			author.getName().add(addBook);
-//			author.getUrl().add(addBook);
+			author.getBooks().add(addBook);
 			return author;
 		}).collect(Collectors.toList()));
 		return bookRepository.save(addBook);
