@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -69,7 +70,7 @@ public class AuthController {
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
-			return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getFirstname(),
+			return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwt).body(new JwtResponse(jwt, userDetails.getId(), userDetails.getFirstname(),
 					userDetails.getLastname(), userDetails.getUsername(), userDetails.getEmail(), roles));
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -131,6 +132,7 @@ public class AuthController {
 	}
 
 	@PutMapping("/update/{id}")
+	@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody SignupRequest signUpRequest) {
 
 		User updateUser = userRepository.findById(id)
@@ -175,15 +177,16 @@ public class AuthController {
 	}
 
 	@GetMapping("/alluser")
+	@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<List<User>> getAllProducts() {
 		List<User> getAllUser = userRepository.findAll();
 
 		return ResponseEntity.ok(getAllUser);
 	}
-//	@PostMapping("/signout")
-//	public ResponseEntity<?> logoutUser() {
-//		ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-//		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-//				.body(new MessageResponse("You've been signed out!"));
-//	}
+	@PostMapping("/signout")
+	public ResponseEntity<?> logoutUser() {
+		ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+				.body(new MessageResponse("You've been signed out!"));
+	}
 }
