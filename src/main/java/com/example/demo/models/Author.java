@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +33,7 @@ public class Author {
 //	private String url;
 
 	@ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Collection<Book> books = new ArrayList<>();
 
 	public Long getId() {

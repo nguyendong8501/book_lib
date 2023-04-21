@@ -6,4 +6,6 @@ import com.example.demo.models.Author;
 
 public interface AuthorService {
 	Author findAuthorById(Long id);
+	Author saveAuthor(Author author);
+
 }

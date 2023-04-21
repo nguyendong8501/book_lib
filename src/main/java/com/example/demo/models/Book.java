@@ -40,7 +40,7 @@ public class Book {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
 
-	@JsonIgnore
+
 	private Collection<Author> authors = new ArrayList<>();
 
 	public Long getId() {
