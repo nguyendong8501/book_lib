@@ -25,9 +25,9 @@ public class AuthorController {
 
 	@PostMapping(value = "/addauthor")
 	public ResponseEntity<?> saveAuthor(@RequestBody Author author) {
-		if (authorRepository.existsByName(author.getName())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Authorname is already taken!"));
-		}
+//		if (authorRepository.existsByName(author.getName())) {
+//			return ResponseEntity.badRequest().body(new MessageResponse("Error: Authorname is already taken!"));
+//		}
 		return new ResponseEntity<>(authorService.saveAuthor(author), HttpStatus.CREATED);
 	}
 }

@@ -15,18 +15,21 @@ import com.example.demo.services.AuthorService;
 public class AuthorServiceImpl implements AuthorService {
 	@Autowired
 	private AuthorRepository authorRepository;
-//	@Autowired
-//	private BookRepository bookRepository;
+	@Autowired
+	private BookRepository bookRepository;
 
 	public Author findAuthorById(Long id) {
 		return authorRepository.findAuthorById(id);
 	}
-
+	public Author findAuthorByName(String name) {
+		return authorRepository.findAuthorByName(name);
+	}
 	public Author saveAuthor(Author author) {
+		
 		Author addAuthor = new Author();
-		addAuthor.setName(author.getName());
+//		addAuthor.setName(author.getName());
 //		addAuthor.getBooks().addAll(author.getBooks().stream().map(au -> {
-//			Book book = bookRepository.findBookById(au.getId());
+//			Book book = bookRepository.findBookByTitle(au.getTitle());
 //			book.getAuthors().add(addAuthor);
 //			return book;
 //		}).collect(Collectors.toList()));
