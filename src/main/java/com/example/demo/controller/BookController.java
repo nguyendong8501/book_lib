@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.models.Book;
-import com.example.demo.payload.response.BookResponse;
+import com.example.demo.payload.response.MessageResponse;
+import com.example.demo.payload.response.PageableResponse;
 import com.example.demo.services.BookService;
+import com.example.demo.services.FilesStorageService;
 
 @CrossOrigin
 @RestController
@@ -26,29 +30,41 @@ import com.example.demo.services.BookService;
 public class BookController {
 	@Autowired
 	private BookService bookService;
+	
+//	@Autowired
+//	private FilesStorageService filesStorageService;
 //	@Autowired
 //	private BookRepository bookRepository;
 
 	@PostMapping(value = "/addbook")
 //	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-	public ResponseEntity<?> saveBook(@RequestBody Book book) {
-		return new ResponseEntity<>(bookService.saveBook(book), HttpStatus.CREATED);
+	
+	public ResponseEntity<?> saveBook(@RequestBody Book book,@RequestParam MultipartFile file) {
+//		filesStorageService.getImage(file);
+		return new ResponseEntity<>(bookService.saveBook(book,file), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/updatebook/{id}")
 //	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+	
 	public ResponseEntity<?> updateBook(@RequestBody Book book, @PathVariable long id) {
 		return new ResponseEntity<>(bookService.updateBook(book, id), HttpStatus.CREATED);
 	}
 
 	@GetMapping(value = "/book")
-	
-	public BookResponse showBook(@RequestParam("page") int page, @RequestParam("limit") int limit) {
-		BookResponse result = new BookResponse();
+
+	public PageableResponse showBook(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+		PageableResponse result = new PageableResponse();
 		result.setPage(page);
 		Pageable pageable = PageRequest.of(page - 1, limit);
 		result.setListResult(bookService.findAll(pageable));
-		result.setTotalPage((int) Math.ceil( (double)(bookService.totalItem()) / limit));
+		result.setTotalPage((int) Math.ceil((double) (bookService.totalItem()) / limit));
 		return result;
+	}
+
+	@DeleteMapping(value = "/book/{id}")
+	public ResponseEntity<?> deleteBook(@PathVariable long id) {
+		bookService.delete(id);
+		return new ResponseEntity<>(new MessageResponse("Deleted successfully"), HttpStatus.OK);
 	}
 }

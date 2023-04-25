@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.models.Author;
@@ -17,7 +18,7 @@ import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.services.AuthorService;
 import com.example.demo.services.BookService;
-
+import com.example.demo.services.FilesStorageService;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -26,17 +27,21 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private AuthorService authorService;
+	@Autowired
+	private FilesStorageService filesStorageService;
 
 //	@Autowired
 //	private AuthorRepository authorRepository;
-
-	public Book saveBook(Book book) {
+	@Override
+	public Book saveBook(Book book,MultipartFile file) {
 
 		Book addBook = new Book();
 		addBook.setTitle(book.getTitle());
 		addBook.setShort_description(book.getShort_description());
 		addBook.setDescription(book.getDescription());
-		addBook.setUrl(book.getUrl());
+		
+		addBook.setUrl(filesStorageService.getImage(file));
+		
 		addBook.getAuthors().addAll(book.getAuthors().stream().map(au -> {
 			Author newAuthor = new Author();
 			Author author = authorService.findAuthorByName(au.getName());
@@ -55,6 +60,7 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.save(addBook);
 	}
 
+	@Override
 	public Book updateBook(Book book, Long id) {
 		Book updateBook = bookRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Book not exist with id: " + id));
@@ -62,23 +68,33 @@ public class BookServiceImpl implements BookService {
 		updateBook.setShort_description(book.getShort_description());
 		updateBook.setDescription(book.getDescription());
 		updateBook.setUrl(book.getUrl());
+		updateBook.getAuthors().clear();
 		updateBook.getAuthors().addAll(book.getAuthors().stream().map(au -> {
 			Author author = authorService.findAuthorByName(au.getName());
-
+//			author.getBooks().clear();
 			author.getBooks().add(updateBook);
 			return author;
 		}).collect(Collectors.toList()));
 		return bookRepository.save(updateBook);
 	}
+
+	@Override
 	public List<Book> findAll(Pageable pageable) {
 		List<Book> results = new ArrayList<>();
 		List<Book> entities = bookRepository.findAll(pageable).getContent();
-		for(Book item: entities) {
+		for (Book item : entities) {
 			results.add(item);
 		}
 		return results;
 	}
-	public int totalItem(){
+
+	@Override
+	public int totalItem() {
 		return (int) bookRepository.count();
+	}
+
+	@Override
+	public void delete(Long id) {
+		bookRepository.deleteById(id);
 	}
 }
