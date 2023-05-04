@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.models.Book;
+import com.example.demo.payload.request.BookRequest;
 import com.example.demo.payload.response.MessageResponse;
 import com.example.demo.payload.response.PageableResponse;
 import com.example.demo.services.BookService;
-import com.example.demo.services.FilesStorageService;
+//import com.example.demo.services.FilesStorageService;
 
 @CrossOrigin
 @RestController
@@ -30,7 +31,7 @@ import com.example.demo.services.FilesStorageService;
 public class BookController {
 	@Autowired
 	private BookService bookService;
-	
+
 //	@Autowired
 //	private FilesStorageService filesStorageService;
 //	@Autowired
@@ -38,17 +39,19 @@ public class BookController {
 
 	@PostMapping(value = "/addbook")
 //	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-	
-	public ResponseEntity<?> saveBook(@RequestBody Book book,@RequestParam MultipartFile file) {
+
+	public ResponseEntity<?> saveBook(@RequestBody BookRequest book) {
 //		filesStorageService.getImage(file);
-		return new ResponseEntity<>(bookService.saveBook(book,file), HttpStatus.CREATED);
+		bookService.saveBook(book);
+		return new ResponseEntity<>(new MessageResponse("Create successfull"), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/updatebook/{id}")
 //	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-	
-	public ResponseEntity<?> updateBook(@RequestBody Book book, @PathVariable long id) {
-		return new ResponseEntity<>(bookService.updateBook(book, id), HttpStatus.CREATED);
+
+	public ResponseEntity<?> updateBook(@RequestBody BookRequest book, @PathVariable long id) {
+		bookService.updateBook(book, id);
+		return new ResponseEntity<>(new MessageResponse("Update successfull"), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/book")

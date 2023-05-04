@@ -14,11 +14,12 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.models.Author;
 import com.example.demo.models.Book;
 import com.example.demo.models.User;
+import com.example.demo.payload.request.BookRequest;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.services.AuthorService;
 import com.example.demo.services.BookService;
-import com.example.demo.services.FilesStorageService;
+//import com.example.demo.services.FilesStorageService;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -27,55 +28,58 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private AuthorService authorService;
-	@Autowired
-	private FilesStorageService filesStorageService;
+//	@Autowired
+//	private FilesStorageService filesStorageService;
 
 //	@Autowired
 //	private AuthorRepository authorRepository;
 	@Override
-	public Book saveBook(Book book,MultipartFile file) {
+	public void saveBook(BookRequest bookRequest) {
 
 		Book addBook = new Book();
-		addBook.setTitle(book.getTitle());
-		addBook.setShort_description(book.getShort_description());
-		addBook.setDescription(book.getDescription());
-		
-		addBook.setUrl(filesStorageService.getImage(file));
-		
-		addBook.getAuthors().addAll(book.getAuthors().stream().map(au -> {
-			Author newAuthor = new Author();
-			Author author = authorService.findAuthorByName(au.getName());
+		addBook.setTitle(bookRequest.getTitle());
+		addBook.setShort_description(bookRequest.getShort_description());
+		addBook.setDescription(bookRequest.getDescription());
+		addBook.setUrl(bookRequest.getUrl());
+//		addBook.setUrl(filesStorageService.getImage(file));
+		for (String authorName : bookRequest.getAuthors()) {
+			Author author = authorService.findAuthorByName(authorName);
 			if (author != null) {
 				author.getBooks().add(addBook);
 			} else {
-				newAuthor.setName(au.getName());
-				authorService.saveAuthor(newAuthor);
-				Author updateAuthor = authorService.findAuthorByName(au.getName());
-				updateAuthor.getBooks().add(addBook);
+				Author newAuthor = new Author();
+				newAuthor.setName(authorName);
+				addBook.getAuthors().add(newAuthor);
+				newAuthor.getBooks().add(addBook);
 			}
+		}
 
-			return author;
-		}).collect(Collectors.toList()));
-
-		return bookRepository.save(addBook);
+		bookRepository.save(addBook);
 	}
 
 	@Override
-	public Book updateBook(Book book, Long id) {
+	public void updateBook(BookRequest bookRequest, Long id) {
 		Book updateBook = bookRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Book not exist with id: " + id));
-		updateBook.setTitle(book.getTitle());
-		updateBook.setShort_description(book.getShort_description());
-		updateBook.setDescription(book.getDescription());
-		updateBook.setUrl(book.getUrl());
+		updateBook.setTitle(bookRequest.getTitle());
+		updateBook.setShort_description(bookRequest.getShort_description());
+		updateBook.setDescription(bookRequest.getDescription());
+		updateBook.setUrl(bookRequest.getUrl());
 		updateBook.getAuthors().clear();
-		updateBook.getAuthors().addAll(book.getAuthors().stream().map(au -> {
-			Author author = authorService.findAuthorByName(au.getName());
-//			author.getBooks().clear();
-			author.getBooks().add(updateBook);
-			return author;
-		}).collect(Collectors.toList()));
-		return bookRepository.save(updateBook);
+
+		for (String authorName : bookRequest.getAuthors()) {
+			Author author = authorService.findAuthorByName(authorName);
+			if (author != null) {
+				author.getBooks().add(updateBook);
+			} else {
+				Author newAuthor = new Author();
+				newAuthor.setName(authorName);
+				updateBook.getAuthors().add(newAuthor);
+				newAuthor.getBooks().add(updateBook);
+			}
+		}
+
+		bookRepository.save(updateBook);
 	}
 
 	@Override
