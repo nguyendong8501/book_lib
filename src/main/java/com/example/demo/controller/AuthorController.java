@@ -33,7 +33,7 @@ public class AuthorController {
 	private AuthorRepository authorRepository;
 
 	@PostMapping(value = "/addauthor")
-	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+//	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
 	public ResponseEntity<?> saveAuthor(@RequestBody Author author) {
 		if (authorRepository.existsByName(author.getName())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Author name is already taken!"));
