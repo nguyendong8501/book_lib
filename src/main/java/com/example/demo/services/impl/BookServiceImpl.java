@@ -46,6 +46,7 @@ public class BookServiceImpl implements BookService {
 			Author author = authorService.findAuthorByName(authorName);
 			if (author != null) {
 				author.getBooks().add(addBook);
+				addBook.getAuthors().add(author);
 			} else {
 				Author newAuthor = new Author();
 				newAuthor.setName(authorName);
@@ -71,6 +72,7 @@ public class BookServiceImpl implements BookService {
 			Author author = authorService.findAuthorByName(authorName);
 			if (author != null) {
 				author.getBooks().add(updateBook);
+				updateBook.getAuthors().add(author);
 			} else {
 				Author newAuthor = new Author();
 				newAuthor.setName(authorName);
