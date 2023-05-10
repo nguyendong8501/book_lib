@@ -23,7 +23,7 @@ import com.example.demo.payload.response.MessageResponse;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.services.AuthorService;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping(value = "api/auth")
 public class AuthorController {

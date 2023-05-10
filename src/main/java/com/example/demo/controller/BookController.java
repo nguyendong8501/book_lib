@@ -25,7 +25,7 @@ import com.example.demo.payload.response.PageableResponse;
 import com.example.demo.services.BookService;
 //import com.example.demo.services.FilesStorageService;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping(value = "/api/auth")
 public class BookController {

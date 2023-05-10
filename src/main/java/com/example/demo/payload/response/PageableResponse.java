@@ -11,7 +11,6 @@ public class PageableResponse {
 	private int totalPage;
 	private List<Book> listResult = new ArrayList<>();
 	private List<Author> listAuthor = new ArrayList<>();
-
 	public int getPage() {
 		return page;
 	}
