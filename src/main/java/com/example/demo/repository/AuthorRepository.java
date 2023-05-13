@@ -5,7 +5,7 @@ package com.example.demo.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.models.Author;
+import com.example.demo.models.book.Author;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 

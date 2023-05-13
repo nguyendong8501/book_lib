@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.models.ERole;
-import com.example.demo.models.Role;
-import com.example.demo.models.User;
+import com.example.demo.models.user.ERole;
+import com.example.demo.models.user.Role;
+import com.example.demo.models.user.User;
 import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.request.SignupRequest;
 import com.example.demo.payload.response.JwtResponse;

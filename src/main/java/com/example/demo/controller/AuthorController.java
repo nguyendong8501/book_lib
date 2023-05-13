@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.models.Author;
 import com.example.demo.payload.response.PageableResponse;
+import com.example.demo.models.book.Author;
 import com.example.demo.payload.response.MessageResponse;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.services.AuthorService;

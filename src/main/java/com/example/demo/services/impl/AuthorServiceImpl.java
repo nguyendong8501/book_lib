@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.models.Author;
+import com.example.demo.models.book.Author;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.services.AuthorService;
@@ -45,7 +45,7 @@ public class AuthorServiceImpl implements AuthorService {
 	public Author updateAuthor(Author author, Long id) {
 		Author updateAuthor = authorRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Author not exist with id: " + id));
-		updateAuthor.setName(author.getName());
+//		updateAuthor.setName(author.getName());
 		return authorRepository.save(updateAuthor);
 	}
 	

@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.models.Book;
+import com.example.demo.dtos.book.AddBookDTO;
+import com.example.demo.models.book.Book;
 import com.example.demo.payload.request.BookRequest;
 import com.example.demo.payload.response.MessageResponse;
 import com.example.demo.payload.response.PageableResponse;
@@ -38,9 +39,9 @@ public class BookController {
 //	private BookRepository bookRepository;
 
 	@PostMapping(value = "/addbook")
-//	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
 
-	public ResponseEntity<?> saveBook(@RequestBody BookRequest book) {
+	public ResponseEntity<?> saveBook(@RequestBody AddBookDTO book) {
 //		filesStorageService.getImage(file);
 		bookService.saveBook(book);
 		return new ResponseEntity<>(new MessageResponse("Create successfull"), HttpStatus.CREATED);

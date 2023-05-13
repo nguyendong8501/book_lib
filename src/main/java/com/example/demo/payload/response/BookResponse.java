@@ -3,7 +3,7 @@ package com.example.demo.payload.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.demo.models.Book;
+import com.example.demo.models.book.Book;
 
 public class BookResponse extends BaseResponse {
 	private List<Book> books = new ArrayList<>();

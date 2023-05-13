@@ -1,10 +1,11 @@
-package com.example.demo.models;
+package com.example.demo.models.book;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.example.demo.models.EntityWithIntegerId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -21,14 +22,15 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "authors")
-public class Author {
+public class Author implements EntityWithIntegerId {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	private String name;
-
+	private String firstName;
+	@Column
+	private String lastName;
 //	@Column(name = "avatar")
 //	private String url;
 
@@ -44,12 +46,20 @@ public class Author {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public Collection<Book> getBooks() {

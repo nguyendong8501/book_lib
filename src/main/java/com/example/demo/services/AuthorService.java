@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
-//import org.springframework.stereotype.Service;
-
-import com.example.demo.models.Author;
+import com.example.demo.models.book.Author;
 
 public interface AuthorService {
 	Author findAuthorByName(String name);

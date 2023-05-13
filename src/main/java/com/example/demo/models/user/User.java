@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.example.demo.models.user;
 
 import jakarta.persistence.*;
 
@@ -15,9 +15,9 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	private String firstname;
-
+	
 	private String lastname;
 	@NotBlank
 	@Size(max = 20)
@@ -32,7 +32,7 @@ public class User {
 	@Size(max = 120)
 	private String password;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 

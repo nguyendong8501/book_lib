@@ -3,8 +3,8 @@ package com.example.demo.payload.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.demo.models.Author;
-import com.example.demo.models.Book;
+import com.example.demo.models.book.Author;
+import com.example.demo.models.book.Book;
 
 public class PageableResponse {
 	private int page;
